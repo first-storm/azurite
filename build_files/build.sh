@@ -1,10 +1,12 @@
-#!/usr/bin/env bash
-set -Eeuo pipefail
+#!/bin/bash
 
-# Edit this file to customize the final image.
-# Examples:
-#   dnf5 install -y vim
-#   systemctl enable podman.socket
-#   install -Dm644 /ctx/files/usr/lib/sysctl.d/example.conf /usr/lib/sysctl.d/example.conf
+set -ouex pipefail
 
-:
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+steps_dir="${script_dir}/steps"
+
+mapfile -t step_scripts < <(find "${steps_dir}" -maxdepth 1 -type f -name '*.sh' | sort)
+
+for step_script in "${step_scripts[@]}"; do
+    "${step_script}"
+done

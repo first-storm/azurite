@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -ouex pipefail
+
+# Verified against v0.6.6.2 on 2026-04-14; keep following GitHub latest at build time.
+latest_release_url="https://github.com/OpenTabletDriver/OpenTabletDriver/releases/latest"
+temp_dir="$(mktemp -d)"
+
+trap 'rm -rf "${temp_dir}"' EXIT
+
+release_url="$(curl -fsSIL -o /dev/null -w '%{url_effective}' "${latest_release_url}")"
+release_tag="$(basename "${release_url}")"
+release_version="${release_tag#v}"
+rpm_arch="$(rpm --eval '%{_arch}')"
+
+case "${rpm_arch}" in
+    x86_64)
+        rpm_filename="opentabletdriver-${release_version}-1.${rpm_arch}.rpm"
+        ;;
+    *)
+        echo "Unsupported OpenTabletDriver RPM architecture: ${rpm_arch}" >&2
+        exit 1
+        ;;
+esac
+
+rpm_url="https://github.com/OpenTabletDriver/OpenTabletDriver/releases/download/${release_tag}/${rpm_filename}"
+rpm_path="${temp_dir}/${rpm_filename}"
+
+curl -fsSL "${rpm_url}" -o "${rpm_path}"
+dnf5 install -y "${rpm_path}"
