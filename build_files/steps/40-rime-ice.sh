@@ -23,7 +23,7 @@ for dir_name in cn_dicts en_dicts lua opencc; do
     rm -rf "${target_dir:?}/${dir_name}"
 
     while IFS= read -r -d '' source_file; do
-        relative_path="${source_file#${source_dir}/}"
+        relative_path="${source_file#"${source_dir}"/}"
         install -Dm644 "${source_file}" "${target_dir}/${relative_path}"
     done < <(find "${source_dir}/${dir_name}" -type f -print0)
 done
