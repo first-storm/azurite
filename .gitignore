@@ -1,0 +1,13 @@
+.astralforge.env
+.codex
+output/
+
+*.qcow2
+*.raw
+*.img
+*.iso
+*.log
+
+.cache/
+tmp/
+temp/

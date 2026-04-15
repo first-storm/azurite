@@ -1,0 +1,75 @@
+name: Build disk artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: Disk artifact type
+        required: true
+        default: qcow2
+        type: choice
+        options:
+          - qcow2
+          - raw
+          - iso
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  build-disk:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Resolve image name
+        id: image
+        shell: bash
+        run: |
+          repo="ghcr.io/${GITHUB_REPOSITORY,,}"
+          echo "name=${repo}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull container image
+        env:
+          ASTRALFORGE_IMAGE: ${{ steps.image.outputs.name }}:latest
+        run: |
+          podman pull "$ASTRALFORGE_IMAGE" || {
+            echo "::error::Missing GHCR image: $ASTRALFORGE_IMAGE. Run the container image workflow first."
+            exit 1
+          }
+
+      - name: Build ${{ inputs.type }} artifact
+        id: disk
+        env:
+          ASTRALFORGE_IMAGE: ${{ steps.image.outputs.name }}:latest
+        shell: bash
+        run: |
+          artifact="$(./astralforge build-disk '${{ inputs.type }}')"
+          echo "artifact=$artifact" >> "$GITHUB_OUTPUT"
+
+      - name: Upload ${{ inputs.type }} artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.type }}-${{ github.sha }}
+          path: ${{ steps.disk.outputs.artifact }}
+          if-no-files-found: error
+
+      - name: Summary
+        run: |
+          {
+            echo '## Disk artifact'
+            echo
+            echo 'Type: `${{ inputs.type }}`'
+            echo
+            echo 'Path: `${{ steps.disk.outputs.artifact }}`'
+          } >> "$GITHUB_STEP_SUMMARY"
