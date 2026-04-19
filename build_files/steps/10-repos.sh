@@ -68,7 +68,3 @@ dnf5 install -y \
 rpm --import https://pkg.cloudflareclient.com/pubkey.gpg
 curl -fsSL https://pkg.cloudflareclient.com/cloudflare-warp-ascii.repo \
     -o /etc/yum.repos.d/cloudflare-warp.repo
-
-# Add the Mullvad VPN repo.
-curl -fsSL https://repository.mullvad.net/rpm/stable/mullvad.repo \
-    -o /etc/yum.repos.d/mullvad.repo
