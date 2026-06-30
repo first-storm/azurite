@@ -5,7 +5,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: "0 5,11,17,23 * * *" # Every 6 hours starting at 05:00 UTC
+    - cron: "0 5 * * *" # Once a day at 05:00 UTC
   push:
     branches:
       - master
