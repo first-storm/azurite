@@ -8,4 +8,6 @@ dnf5 install -y \
     gnome-tweaks \
     cloudflare-warp
 
-dnf5 remove -y gnome-tour
+dnf5 remove -y \
+    firefox \
+    gnome-tour
