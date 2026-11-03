@@ -68,3 +68,9 @@ dnf5 install -y \
 rpm --import https://pkg.cloudflareclient.com/pubkey.gpg
 curl -fsSL https://pkg.cloudflareclient.com/cloudflare-warp-ascii.repo \
     -o /etc/yum.repos.d/cloudflare-warp.repo
+
+# Cloudflare publishes per-release repos and lags behind new Fedora releases.
+# Use the current release if it exists, otherwise fall back to the previous one.
+if ! curl -fsSI "https://pkg.cloudflareclient.com/rpm/${fedora_version}/repodata/repomd.xml" >/dev/null; then
+    sed -i "s#/rpm/\$releasever#/rpm/$((fedora_version - 1))#" /etc/yum.repos.d/cloudflare-warp.repo
+fi

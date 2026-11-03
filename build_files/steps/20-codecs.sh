@@ -13,7 +13,10 @@ fi
 if rpm -q mesa-va-drivers >/dev/null 2>&1; then
     dnf5 swap -y mesa-va-drivers mesa-va-drivers-freeworld --allowerasing
 else
-    dnf5 install -y mesa-va-drivers-freeworld
+    # RPM Fusion can publish a mesa build before it reaches Fedora's stable
+    # repo; fall back to updates-testing so mesa-filesystem matches.
+    dnf5 install -y mesa-va-drivers-freeworld ||
+        dnf5 install -y --enablerepo=updates-testing mesa-va-drivers-freeworld
 fi
 
 if rpm -q mesa-vdpau-drivers >/dev/null 2>&1; then
