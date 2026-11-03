@@ -69,4 +69,4 @@ Copy `astralforge.env.example` to `.astralforge.env` and modify as needed.
 
 ## Base Image
 
-Defaults to `quay.io/fedora/fedora-silverblue:44`. Change in [Containerfile](Containerfile).
+Defaults to `quay.io/fedora/fedora-silverblue:45`. Change in [Containerfile](Containerfile).

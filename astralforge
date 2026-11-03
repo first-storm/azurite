@@ -119,7 +119,7 @@ load_config_file() {
 
 apply_defaults() {
 	: "${ASTRALFORGE_IMAGE:=localhost/astralforge:latest}"
-	: "${ASTRALFORGE_BASE_IMAGE:=quay.io/fedora/fedora-silverblue:44}"
+	: "${ASTRALFORGE_BASE_IMAGE:=quay.io/fedora/fedora-silverblue:45}"
 	: "${ASTRALFORGE_CONTAINERFILE:=Containerfile}"
 	: "${ASTRALFORGE_CONTEXT:=.}"
 	: "${ASTRALFORGE_SOURCE:=}"

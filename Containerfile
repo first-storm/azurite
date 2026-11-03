@@ -1,7 +1,7 @@
 # Base Image Argument
 ## Define the base image to use. This must be declared before any FROM directive
 ## to be available in all build stages.
-ARG BASE_IMAGE=quay.io/fedora/fedora-silverblue:44
+ARG BASE_IMAGE=quay.io/fedora/fedora-silverblue:45
 
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
