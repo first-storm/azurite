@@ -25,10 +25,12 @@ if rpm -q mesa-vdpau-drivers >/dev/null 2>&1; then
     dnf5 swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld --allowerasing
 fi
 
+# Keep openh264 itself: it provides libopenh264.so, which libavcodec and
+# ffmpeg-libs link against. Removing it makes dnf5 remove every package that
+# depends on it, including gnome-shell, nautilus and flatpak.
 dnf5 remove -y \
     mozilla-openh264 \
-    gstreamer1-plugin-openh264 \
-    openh264 || true
+    gstreamer1-plugin-openh264 || true
 
 dnf5 install -y \
     gstreamer1-plugin-libav \
