@@ -5,6 +5,8 @@ set -ouex pipefail
 dnf5 install -y \
     adw-gtk3-theme \
     distrobox \
+    fuse \
+    fuse-libs \
     gnome-tweaks \
     NetworkManager-strongswan \
     NetworkManager-strongswan-gnome \
