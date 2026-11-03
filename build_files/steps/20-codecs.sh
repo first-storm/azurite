@@ -14,9 +14,11 @@ if rpm -q mesa-va-drivers >/dev/null 2>&1; then
     dnf5 swap -y mesa-va-drivers mesa-va-drivers-freeworld --allowerasing
 else
     # RPM Fusion can publish a mesa build before it reaches Fedora's stable
-    # repo; fall back to updates-testing so mesa-filesystem matches.
+    # repo, making this uninstallable. Skip it rather than pulling mesa from
+    # updates-testing (which breaks later dependency resolution); a later
+    # scheduled build picks it up once mesa is stable.
     dnf5 install -y mesa-va-drivers-freeworld ||
-        dnf5 install -y --enablerepo=updates-testing mesa-va-drivers-freeworld
+        echo "WARNING: mesa-va-drivers-freeworld skipped (mesa version mismatch)"
 fi
 
 if rpm -q mesa-vdpau-drivers >/dev/null 2>&1; then
